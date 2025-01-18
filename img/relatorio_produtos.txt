@@ -1,0 +1,40 @@
+Relatório de Produtos
+Data e Hora: 2025-01-05 12:35:30
+
+ID    Nome                 Preço      Quantidade
+--------------------------------------------------
+1     biscoite treloso     2.75       90        
+2     biscoite passa tempo 2.00       70        
+3     farinha              10.00      9995      
+4     pao                  0.50       99981     
+5     bolacha rosquinha de chocolate 4.00       100       
+6     bolacha rosquinha de banana 4.00       100       
+7     bolacha rosquinha de leite 4.00       97        
+8     bolacha rosquinha de côco 4.00       100       
+9     bolacha maria de leite 4.00       100       
+10    bolacha maria        4.00       100       
+11    bolacha maizena      5.00       100       
+12    biscoite vitarela waffel 3.00       100       
+13    cuscuz               1.00       100       
+14    arroz                4.00       100       
+15    feijão kikaldo       3.75       100       
+16    açúcar cristal       3.75       100       
+17    açúcar demerara      4.00       100       
+18    macarrão espaguete   1.89       100       
+19    macarrão anjinho     3.00       100       
+20    macarrão de lasanha  7.00       100       
+21    sabão em pó          4.00       100       
+22    sabão em pó Ipe      4.50       100       
+23    sabão em pedra       3.00       100       
+24    sabão em pedra ala   4.00       100       
+25    agua sanitaria       2.75       96        
+26    leite em pó italac   5.00       90        
+27    leite 1 litro        4.00       100       
+28    manteiga 500g        4.75       100       
+29    margarina primor     5.00       100       
+30    pamonha              12.00      80        
+31    Maça verde           5.00       5         
+
+Resumo Financeiro:
+Valor Total Vendido: R$ 150.00
+Valor Total em Estoque: R$ 160979.00

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jornal do dev</title>
+    <link rel="stylesheet" href="/chat_app/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material-darker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+    <style>
+        body {
+            background-color: #457f9c;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+           display: flex;
+           flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tela_conteudo {
+            width: 80%;
+            padding: 20px;
+        }
+
+        .editor-wrapper {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .output-wrapper {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            color: white;
+        }
+        header {
+    background-color: #3b5998; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 10px 0; /* Espaçamento interno do cabeçalho */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Espaça igualmente os elementos */
+    align-items: center;
+    width: 100%;
+}
+
+.nav-buttons button {
+    background: none; /* Remove o fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    cursor: pointer; /* Adiciona o cursor de clique */
+    justify-content: end;
+    width: 50%;
+    font-size: 16px; /* Tamanho da fonte do botão */
+    width: 170px;
+}
+
+.nav-buttons button:hover {
+    color: #dfe3ee; /* Cor do texto quando o mouse está sobre o botão */
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <a href="index.html">
+                    <h3><i class="fas fa-home"></i> Jornal do Dev</h3>
+                </a>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="tela_conteudo" style="color: rgb(245, 240, 240); text-align: center; background-color: rgb(160, 10, 10); display: flex; justify-content: space-between;">
+            <p>ambiente criado para desenvolvimento de código em javascript</p>
+        </div>
+        <div class="tela_conteudo" style="background-color: white">
+            <h4 style="color: black;">atalho de Sintaxe : Ctrl + Space</h4>
+            <p style="color: black;">OBS : NÃO CRIE UM LOOP INFINITO. seu pc vai travar</p>
+            <div class="editor-wrapper">
+                <textarea id="code-editor" placeholder="Escreva seu código aqui..."></textarea>
+            </div>
+            <button onclick="executeCode()">Executar Código</button>
+            <div class="output-wrapper">
+                <pre id="output"></pre>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/javascript-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
+    <script>
+        const editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+            lineNumbers: true,
+            mode: "javascript",
+            theme: "material-darker",
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+                "Tab": function(cm) {
+                    cm.replaceSelection("    ", "end");
+                }
+            }
+        });
+
+        editor.on("inputRead", function(cm, change) {
+            if (change.origin !== 'setValue' && change.text[0] !== " ") {
+                CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+            }
+        });
+
+        async function executeCode() {
+            const code = editor.getValue();
+            const outputElement = document.getElementById('output');
+            outputElement.textContent = ''; // Limpa a saída anterior
+
+            try {
+                const func = new Function(code);
+                func();
+            } catch (e) {
+                outputElement.textContent = 'Erro no código: ' + e.message;
+            }
+        }
+
+        const originalLog = console.log;
+        console.log = function(message) {
+            const outputElement = document.getElementById('output');
+            outputElement.textContent += message + '\n';
+            originalLog.apply(console, arguments);
+        };
+    </script>
+</body>
+</html>

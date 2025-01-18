@@ -1,0 +1,281 @@
+<script>
+    function toggleChat() {
+ const chatSidebar = document.getElementById('chat-sidebar');
+ if (chatSidebar.classList.contains('active')) {
+     chatSidebar.classList.remove('active');
+     chatSidebar.classList.add('inactive');
+ } else {
+     chatSidebar.classList.remove('inactive');
+     chatSidebar.classList.add('active');
+ }
+}
+
+// Configuração do Firebase
+const firebaseConfig = {
+ apiKey: "AIzaSyCo4H9k5dYt0H5VnQ5jQW3otVnNUshMwc8",
+ authDomain: "vagas-74cb2.firebaseapp.com",
+ databaseURL: "https://vagas-74cb2-default-rtdb.firebaseio.com",
+ projectId: "vagas-74cb2",
+ storageBucket: "vagas-74cb2.firebasestorage.app",
+ messagingSenderId: "973053917183",
+ appId: "1:973053917183:web:6c5f374a224a6f407359ca",
+ measurementId: "G-E6XM6SS83W"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Função para formatar texto com links
+function formatTextWithLinks(text) {
+ const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+ const formattedText = text.replace(urlPattern, (url) => {
+     const shortUrl = url.length > 30 ? `${url.slice(0, 30)}...` : url;
+     return `<a href="${url}" target="_blank">${shortUrl}</a>`;
+ });
+ return formattedText;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ const inputMensagem = document.getElementById('inputMensagem');
+ const botaoEnviar = document.getElementById('botaoEnviar');
+ const mensagensContainer = document.getElementById('chatMessages');
+ const inputFoto = document.getElementById('inputFoto');
+
+ // Função para adicionar uma postagem ao feed
+ function addPostToFeed(id, name, text, likes, profileImageUrl, timestamp, imageUrl) {
+     const postagemDiv = document.createElement('div');
+     postagemDiv.classList.add('postagem', 'card', 'mb-4');
+     postagemDiv.setAttribute('data-key', id);
+
+     const cardHeader = document.createElement('div');
+     cardHeader.classList.add('card-header', 'd-flex', 'align-items-center');
+     const userImg = document.createElement('img');
+     userImg.src = profileImageUrl;
+     userImg.classList.add('rounded-circle', 'mr-2');
+     const userNome = document.createElement('strong');
+     userNome.textContent = name;
+     const dateSpan = document.createElement('span');
+     dateSpan.classList.add('ml-auto');
+     dateSpan.textContent = new Date(timestamp).toLocaleString();
+     cardHeader.appendChild(userImg);
+     cardHeader.appendChild(userNome);
+     cardHeader.appendChild(dateSpan);
+
+     const cardBody = document.createElement('div');
+     cardBody.classList.add('card-body');
+
+     if (text) {
+         const textoP = document.createElement('p');
+         textoP.innerHTML = formatTextWithLinks(text);
+         cardBody.appendChild(textoP);
+     }
+
+     if (imageUrl) {
+         const fotoImg = document.createElement('img');
+         fotoImg.src = imageUrl;
+         fotoImg.classList.add('card-img-top', 'img-fluid', 'mb-2');
+         cardBody.appendChild(fotoImg);
+     }
+
+     postagemDiv.appendChild(cardHeader);
+     postagemDiv.appendChild(cardBody);
+
+     const actionsDiv = document.createElement('div');
+     actionsDiv.classList.add('actionsDiv');
+
+     const likeButton = document.createElement('button');
+     likeButton.classList.add('btn', 'btn-light', 'like-button');
+     likeButton.innerHTML = '<span class="material-symbols-outlined like-icon">favorite</span> Curtir';
+
+     const likeCounter = document.createElement('span');
+     likeCounter.classList.add('like-counter');
+     likeCounter.textContent = `${likes} curtidas`;
+
+     likeButton.onclick = function() {
+         const postRef = database.ref('messages/' + id);
+         postRef.transaction(post => {
+             if (post) {
+                 post.likes = (post.likes || 0) + 1;
+             }
+             return post;
+         });
+     };
+
+     const commentCount = document.createElement('span');
+     commentCount.classList.add('comment-counter');
+     database.ref(`messages/${id}/comentarios`).on('value', (snapshot) => {
+         const count = snapshot.numChildren();
+         commentCount.textContent = `${count} comentários`;
+     });
+
+     const deleteButton = document.createElement('button');
+     deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
+     deleteButton.textContent = 'Excluir';
+     deleteButton.onclick = function() {
+         if (confirm('Tem certeza que deseja excluir esta postagem?')) {
+             database.ref('messages/' + id).remove();
+         }
+     };
+
+     actionsDiv.appendChild(likeButton);
+     actionsDiv.appendChild(likeCounter);
+     actionsDiv.appendChild(commentCount);
+     actionsDiv.appendChild(deleteButton);
+
+     const commentSection = document.createElement('div');
+     commentSection.classList.add('comment-section', 'mt-3');
+     const commentInputGroup = document.createElement('div');
+     commentInputGroup.classList.add('input-group');
+     const commentInput = document.createElement('input');
+     commentInput.classList.add('form-control', 'comment-input');
+     commentInput.placeholder = 'Escreva um comentário...';
+     const postCommentButton = document.createElement('div');
+     postCommentButton.classList.add('input-group-append');
+     const commentButton = document.createElement('button');
+     commentButton.classList.add('btn', 'btn-primary');
+     commentButton.innerHTML = 'Comentar';
+     postCommentButton.appendChild(commentButton);
+     commentInputGroup.appendChild(commentInput);
+     commentInputGroup.appendChild(postCommentButton);
+
+     commentButton.onclick = function() {
+         enviarComentario(id, commentInput.value);
+         commentInput.value = '';
+     };
+
+     cardBody.appendChild(actionsDiv);
+     cardBody.appendChild(commentSection);
+     cardBody.appendChild(commentInputGroup);
+
+     postagemDiv.appendChild(cardBody);
+     mensagensContainer.prepend(postagemDiv);
+
+     database.ref(`messages/${id}/comentarios`).on('child_added', (snapshot) => {
+         const comentario = snapshot.val();
+         const commentDiv = document.createElement('div');
+         commentDiv.classList.add('comment', 'mt-2', 'border-top', 'pt-2');
+         commentDiv.textContent = `${comentario.name}: ${comentario.text}`;
+         commentSection.appendChild(commentDiv);
+     });
+ }
+
+ botaoEnviar.addEventListener('click', () => {
+     const userName = localStorage.getItem('userName') || 'Anônimo';
+     const profileImageUrl = localStorage.getItem('profileImageUrl') || 'default-profile.png';
+     const message = {
+         name: userName,
+         text: inputMensagem.value,
+         likes: 0,
+         profileImageUrl: profileImageUrl,
+         timestamp: Date.now(),
+         imageUrl: null
+     };
+
+     if (inputFoto.files.length > 0) {
+         const fileReader = new FileReader();
+         fileReader.onload = function(e) {
+             message.imageUrl = e.target.result;
+             database.ref('messages').push(message)
+                 .then(() => {
+                     inputMensagem.value = '';
+                     inputFoto.value = '';
+                 })
+                 .catch((error) => {
+                     console.error("Erro ao enviar a mensagem:", error);
+                 });
+         };
+         fileReader.readAsDataURL(inputFoto.files[0]);
+     } else {
+         if (inputMensagem.value.trim() !== "") {
+             database.ref('messages').push(message)
+                 .then(() => {
+                     inputMensagem.value = '';
+                 })
+                 .catch((error) => {
+                     console.error("Erro ao enviar a mensagem:", error);
+                 });
+         }
+     }
+ });
+
+ inputMensagem.addEventListener('keypress', (event) => {
+     if (event.key === 'Enter') {
+         botaoEnviar.click();
+     }
+ });
+
+ const postsRef = database.ref('messages');
+ postsRef.on('child_added', (snapshot) => {
+     const post = snapshot.val();
+     const timestamp = post.timestamp || Date.now();
+     const profileImageUrl = post.profileImageUrl || 'default-profile.png';
+     const imageUrl = post.imageUrl || null;
+     addPostToFeed(snapshot.key, post.name, post.text, post.likes || 0, profileImageUrl, timestamp, imageUrl);
+ });
+
+ postsRef.on('child_changed', (snapshot) => {
+     const post = snapshot.val();
+     const postagemDiv = document.querySelector(`[data-key="${snapshot.key}"]`);
+     if (postagemDiv) {
+         const likeCount = postagemDiv.querySelector('.like-counter');
+         likeCount.textContent = `${post.likes} curtidas`;
+     }
+ });
+
+ const modal = document.getElementById('nameModal');
+ const span = document.getElementsByClassName('close')[0];
+ const saveNameBtn = document.getElementById('saveNameBtn');
+ const userNameInput = document.getElementById('userNameInput');
+ const profileImageInput = document.getElementById('profileImageInput');
+
+ span.onclick = function() {
+     modal.style.display = 'none';
+ }
+
+ window.onclick = function(event) {
+     if (event.target == modal) {
+         modal.style.display = 'none';
+     }
+ }
+
+ saveNameBtn.onclick = function() {
+     const userName = userNameInput.value.trim();
+     const profileImageFile = profileImageInput.files[0];
+
+     if (userName !== '' && profileImageFile) {
+         const reader = new FileReader();
+         reader.onload = function(e) {
+             localStorage.setItem('userName', userName);
+             localStorage.setItem('profileImageUrl', e.target.result);
+             modal.style.display = 'none';
+         }
+         reader.readAsDataURL(profileImageFile);
+     }
+ }
+
+ if (!localStorage.getItem('userName')) {
+     modal.style.display = 'block';
+ }
+});
+
+// Função para enviar comentários
+function enviarComentario(postId, comentarioText) {
+ const userName = localStorage.getItem('userName') || 'Anônimo';
+ const comentario = {
+     name: userName,
+     text: comentarioText
+ };
+
+ database.ref(`messages/${postId}/comentarios`).push(comentario)
+     .catch((error) => {
+         console.error("Erro ao enviar o comentário:", error);
+     });
+}
+
+function clearLocalStorage() {
+ localStorage.clear();
+ alert('Todo o conteúdo do localStorage foi limpo!');
+}
+
+ </script>

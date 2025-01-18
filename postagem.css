@@ -1,0 +1,795 @@
+body {
+    font-family: 'Verdana, Geneva, Tahoma, sans-serif';
+    margin: 0;
+    padding: 0;
+    background-color: #e9ebee;
+}
+header {
+    background-color: #3b5998;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.feed_noticias_publica {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 500px;
+}
+
+.barra {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    width: 90%;
+}
+
+.digitar {
+    
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+#botaoEnviar, .custom-file-label {
+    background-color: #4267b2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.custom-file-label i {
+    margin-right: 8px;
+}
+.mensagens {
+    width: 90%;
+    margin-top: 20px;
+    overflow-y: scroll;
+    height: 200vh;
+}
+
+.jornal-banner {
+    text-align: center;
+    background-image: url('/img/OIP (1).jfif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 20px;
+    color: white;
+}
+.jornal-banner h2 {
+    font-size: 36px;
+    margin: 0;
+}
+.sidebar {
+    width: 250px;
+    margin-right: 20px;
+}
+.sidebar h3 {
+    font-size: 18px;
+    color: #3b5998;
+    margin-bottom: 10px;
+}
+.online-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.online-user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.online-user span {
+    font-size: 14px;
+    color: #333;
+}
+.tools-sidebar {
+    width: 250px;
+    margin-left: 20px;
+}
+.tools-sidebar h3 {
+    font-size: 18px;
+    color: #3b5998;
+    margin-bottom: 10px;
+}
+.tool {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.tool img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+.tool a {
+    font-size: 14px;
+    color: #3b5998;
+    text-decoration: none;
+}
+/* Estilo geral para a postagem */
+.postagem {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+/* Cabeçalho da postagem com imagem e nome do usuário */
+.postagem .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.postagem .card-header img {
+    border-radius: 50%;
+    height: 30px;  /* Diminuído para 30px */
+    width: 30px;   /* Diminuído para 30px */
+    margin-right: 10px;
+}
+
+.postagem .card-header strong {
+    margin: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Corpo da postagem */
+.postagem .card-body {
+    padding: 10px 0;
+}
+
+/* Texto da postagem */
+.postagem .card-body p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Imagem da postagem */
+.postagem .card-body img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Seção de ações (Curtir, Compartilhar) */
+.actionsDiv {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.like-button, .share-button {
+    background-color: #f5f6f7;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.like-button:hover, .share-button:hover {
+    background-color: #e4e6eb;
+}
+
+.like-button .material-symbols-outlined, .share-button .material-symbols-outlined {
+    margin-right: 5px;
+}
+
+.like-counter {
+    font-size: 14px;
+    color: #555;
+    align-self: center;
+}
+
+/* Estilo geral para o contêiner do comentário */
+.comment-section {
+    padding: 15px;
+    background-color: #f9f9f900;
+    border-radius: 8px;
+    border: 1px solid #dddddd00;
+    margin-top: 20px;
+}
+
+/* Estilo para o input de comentário */
+.comment-input {
+    width: 90%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: inline-block; /* Alinha o input e o botão lado a lado */
+    vertical-align: middle;
+}
+
+/* Estilo para o botão de comentar */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    display: inline-block; /* Alinha o input e o botão lado a lado */
+    vertical-align: middle;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para o contêiner de entrada de comentário */
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Estilo para cada comentário */
+.comment {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-top: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para o nome do usuário no comentário */
+.comment strong {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Estilo para o texto do comentário */
+.comment p {
+    margin: 0;
+    color: #555;
+}
+
+/* Estilo para o contêiner de ações (curtir, compartilhar, comentar) */
+.actionsDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Estilo para os botões de ação */
+.actionsDiv .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.actionsDiv .btn:hover {
+    background-color: #e1e1e1;
+}
+
+/* Estilo para o contador de curtidas */
+.like-counter {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Estilo para o botão de limpar localStorage */
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-top: 20px; /* Adiciona um pouco de espaço superior */
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.left-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.perfil-acesso {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.perfil-acesso img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.perfil-acesso span {
+    font-weight: bold;
+}
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+}
+
+.ia-tool {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.ia-tool img {
+    margin-right: 10px;
+}
+
+.ia-tool a {
+    text-decoration: none;
+    color: #333;
+}
+
+.ia-tool a:hover {
+    text-decoration: underline;
+}
+.header-content{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-buttons{
+    width: 60%;
+    display: flex;
+    justify-content: end;
+    justify-content: space-between;
+}
+
+.nav-buttons a button{
+    height: 100%;
+    font-size: 1.0rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+@media (min-width: 600px) {
+    main{
+        background-color: white;
+    }
+    .marquee-container{
+        display: block;
+    }
+    .informacao{
+        display: none;
+    }
+    .rels{
+        width: 80%;
+        
+    }
+    .menusinho{
+        display: none;
+
+    }
+    .real {
+        display: none;
+    }
+}
+
+
+@media (max-width: 600px) {
+    main{
+        background-color: white;
+        display: none;
+    }
+    header{
+        display: none;
+    }
+    .real {
+        display: block;
+    }
+}
+
+/* Estilo do Modal */
+
+/* Estilos do Modal */
+#nameModal {
+    display: none; /* Esconde o modal inicialmente */
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo preto com opacidade */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Conteúdo do Modal */
+.modal-content {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    border: none;
+    width: 70%;
+    max-width: 500px; /* Largura máxima para o modal */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave */
+}
+
+/* Botão Fechar */
+.close {
+    color: #bbb;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Título */
+h2 {
+    font-family: 'Georgia', serif;
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Divisões e Parágrafos */
+.modal-content div {
+    margin: 10px 0;
+}
+
+.modal-content p {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    color: #666;
+    margin-right: 10px;
+}
+
+/* Input de Usuário */
+#userNameInput {
+    height: 30px;
+    margin: 12px;
+    background-color: #f2f2f2;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: calc(100% - 34px); /* Ajusta a largura do input */
+}
+
+/* Input de Arquivo */
+#profileImageInput {
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%; /* Ajusta a largura do input de arquivo */
+    background-color: #f2f2f2;
+}
+
+/* Botão Salvar */
+#saveNameBtn {
+    background-color: #1abc9c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 20px auto;
+    width: 90%; /* Ajusta a largura do botão */
+}
+
+#saveNameBtn:hover {
+    background-color: #16a085;
+}
+
+/* Estilo para o botão de delete */
+.btn-danger {
+    background-color: #e74c3c; /* Cor de fundo vermelha */
+    border: none; /* Remove a borda padrão */
+    color: white; /* Texto branco */
+    padding: 10px 20px; /* Espaçamento interno */
+    text-align: center; /* Centraliza o texto */
+    text-decoration: none; /* Remove sublinhado */
+    display: inline-block; /* Exibe como um elemento em linha */
+    font-size: 16px; /* Tamanho da fonte */
+    margin: 4px 2px; /* Margem */
+    cursor: pointer; /* Cursor de ponteiro */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease-in-out; /* Transição suave para a mudança de cor */
+}
+
+.btn-danger:hover {
+    background-color: #c0392b; /* Cor de fundo mais escura ao passar o mouse */
+}
+
+/* Estilo para vídeos */
+.card-body video {
+    width: 100%;
+    max-width: 700px; /* Define a largura máxima do vídeo */
+    height: auto;
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave */
+    margin-top: 10px; /* Espaçamento superior */
+}
+
+.chat-sidebar {
+    position: fixed; /* Fixa o chat em um local específico da página */
+    left: 1040px; /* Define a distância do lado esquerdo da tela */
+    bottom: 10px; /* Define a distância da parte inferior da tela */
+    width: 280px; /* Ajuste conforme necessário para caber no layout */
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Adicione estas regras ao CSS */
+.chat-content {
+    max-height: 400px; /* Defina uma altura máxima inicial */
+    overflow: hidden; /* Esconda o conteúdo que excede a altura máxima */
+    transition: max-height 0.5s ease-in-out; /* Transição suave para o efeito de deslizar */
+}
+
+.chat-content.hidden {
+    max-height: 0; /* Altura zero para esconder o conteúdo */
+}
+
+/* Estilo para o cabeçalho do chat */
+.chat-header {
+    background-color: #0d0b50;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+}
+
+.chat-header:hover {
+    background-color: #555;
+}
+
+/* Estilo para a mensagem vazia */
+.empty-chat-message {
+    color: #999; /* Texto de cor cinza claro */
+}
+
+/* Estilo para a entrada do chat */
+.chat-input {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background-color: #fffbfb;
+    color: #030303;
+    margin-right: 10px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4267b2;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chat-input button:hover {
+    background-color: #365899;
+}
+
+/* Estilo das mensagens no chat */
+.chat-message {
+    display: flex;
+    align-items: flex-start;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+
+/* Adiciona estilo para manter o chat responsivo */
+.chat-content {
+    padding: 10px;
+    overflow-y: auto; /* Permite a rolagem vertical */
+    max-height: 400px; /* Define uma altura máxima */
+}
+
+/* Estilo para a animação de loading */
+.loader span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #333;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite ease-in-out both;
+}
+
+.loader span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loader span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+        #notification {
+            position: relative;
+            display: inline-block;
+        }
+
+        #notification::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+/* Estilos gerais */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Comentários das postagens */
+.comment-section {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Comentário individual */
+.comment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #f1f1f1;
+}
+
+/* Container para nome e imagem do usuário */
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #e1e1e1;
+}
+
+.comment-header strong {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Texto do comentário */
+.comment .comment-text {
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 95%;
+}
+
+/* Input de comentário */
+.input-group {
+    margin-top: 20px;
+}
+
+.input-group .form-control {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.input-group .form-control:focus {
+    background-color: #f9f9f9;
+    border-color: #aaa;
+}
+
+.input-group .btn-primary {
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+    border-radius: 15px;
+    color: #fff;
+}

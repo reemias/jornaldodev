@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Sistema 1.0.10</title>
+    <link rel="stylesheet" href="/chat_app/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        main{
+            width: 100%;
+        }
+          .note-container {
+        width: 90%;
+        background-color: #ffefd5;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0 auto;
+        border: 1px solid #d2b48c;
+    }
+    .note-container h3 {
+        color: #8b4513;
+        border-bottom: 2px dashed #8b4513;
+        padding-bottom: 10px;
+    }
+    .note-inputs {
+        display: flex;
+        flex-direction: column;
+        margin-top: 15px;
+    }
+    .note-inputs input,
+    .note-inputs textarea {
+        width: 90%;
+        border: 1px solid #8b4513;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 1em;
+        background-color: #fff8dc;
+        color: #8b4513;
+    }
+    .note-inputs textarea {
+        height: 100px;
+        resize: none;
+    }
+    button {
+        height: 40px;
+        width: 100px;
+        border-radius: 5px;
+        border: none;
+        background-color: #ff8c00;
+        color: white;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+       
+    }
+    header {
+    background-color: #3b5998; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 10px 0; /* Espaçamento interno do cabeçalho */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Espaça igualmente os elementos */
+    align-items: center;
+    width: 100%;
+}
+
+.nav-buttons button {
+    background: none; /* Remove o fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    cursor: pointer; /* Adiciona o cursor de clique */
+    justify-content: end;
+    width: 50%;
+    font-size: 16px; /* Tamanho da fonte do botão */
+    width: 170px;
+}
+
+.nav-buttons button:hover {
+    color: #dfe3ee; /* Cor do texto quando o mouse está sobre o botão */
+}
+  
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <h3><i class="fas fa-home"></i> Jornal do Dev</h3>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <aside class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header" onclick="toggleChat()">Chat</div>
+            <div class="chat-content" id="chat-container">
+                <div class="pombo">
+                    <p>Escreva "pesquise sobre" antes de digitar o que quer pesquisar.</p>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Pergunte alguma coisa...">
+                <button onclick="processInput()">Enviar</button>
+            </div>
+        </aside>
+    </main>
+    <script>
+    
+        function checkLoginStatus() {
+            let name = localStorage.getItem('loggedInUser');
+            if (name) {
+                // Usuário logado, redireciona para o perfil
+                window.location.href = 'perfil.html';
+            } else {
+                // Usuário não logado, exibe a tela de login
+                showLoginScreen();
+            }
+        }
+    
+        function showLoginScreen() {
+            // Esconde a div caixa_perfil
+            document.querySelector('.caixa_perfil').style.display = 'none';
+    
+            // Cria a tela de login
+            let loginScreen = document.createElement('div');
+            loginScreen.classList.add('login-screen');
+            loginScreen.innerHTML = `
+                <div class="login-container">
+                    <h2>Login</h2>
+                    <input type="text" id="login-name" placeholder="Nome">
+                    <input type="password" id="login-password" placeholder="Senha">
+                    <button id="login-button">Acessar</button>
+                </div>
+            `;
+            document.body.appendChild(loginScreen);
+    
+            document.getElementById('login-button').addEventListener('click', handleLogin);
+        }
+    
+        function handleLogin() {
+            let name = document.getElementById('login-name').value;
+            let password = document.getElementById('login-password').value;
+            let storedPassword = localStorage.getItem(name);
+    
+            if (storedPassword && storedPassword === password) {
+                // Login bem-sucedido
+                localStorage.setItem('loggedInUser', name);
+                document.querySelector('.login-screen').remove();
+                document.querySelector('.caixa_perfil').innerHTML = `<p>Bem vindo, ${name}!</p>`;
+                document.querySelector('.caixa_perfil').style.display = 'block';
+            } else {
+                // Falha no login, fecha a tela de login
+                document.querySelector('.login-screen').remove();
+                document.querySelector('.caixa_perfil').style.display = 'block';
+            }
+        }
+    
+        function toggleChat() {
+            const chatSidebar = document.getElementById('chat-sidebar');
+            chatSidebar.classList.toggle('active');
+        }
+    
+</script>
+<script src="js.js"></script>
+</body>
+</html>

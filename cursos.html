@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jornal do dev</title>
+    <link rel="stylesheet" href="/chat_app/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        header {
+    background-color: #3b5998; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 10px 0; /* Espaçamento interno do cabeçalho */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Espaça igualmente os elementos */
+    align-items: center;
+    width: 100%;
+}
+
+.nav-buttons button {
+    background: none; /* Remove o fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    cursor: pointer; /* Adiciona o cursor de clique */
+    justify-content: end;
+    width: 50%;
+    font-size: 16px; /* Tamanho da fonte do botão */
+    width: 170px;
+}
+
+.nav-buttons button:hover {
+    color: #dfe3ee; /* Cor do texto quando o mouse está sobre o botão */
+}
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .barra_navegação {
+            background-color: #f4f4f4;
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .barra_navegação button {
+            margin: 5px 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .barra_navegação button:hover {
+            background-color: #45a049;
+        }
+        .curso-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            max-height: 900px; /* Ajuste a altura conforme necessário */
+            overflow-y: auto; /* Adiciona a barra de rolagem vertical */
+        }
+
+        /* Adicionando estilos para esconder a barra de rolagem */
+        .curso-container::-webkit-scrollbar {
+            width: 0px; /* Largura da barra de rolagem */
+            background: transparent; /* Fundo da barra de rolagem */
+        }
+
+        .curso-container {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .curso-container::-webkit-scrollbar-thumb {
+            background: transparent; /* Estilo do "polegar" da barra de rolagem */
+        }
+
+
+        .curso {
+            background-color: white;
+            color: #333;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex: 0 1 calc(33% - 40px);
+            box-sizing: border-box;
+        }
+        .curso button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+        .curso button:hover {
+            background-color: #45a049;
+        }
+        #mensagem {
+            padding: 20px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 20px;
+            text-align: center;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+        .search-container input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .search-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <a href="index.html">
+                    <h3><i class="fas fa-home"></i> Jornal do Dev</h3>
+                </a>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" name="search" id="search" placeholder="Pesquisar...">
+            <button>Pesquisar</button>
+        </div>
+        <div class="curso-container">
+            <div class="curso" data-category="CSS">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do CSS</h4>
+                        <p>vejá a Ducumentação completa do CSS, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://developer.mozilla.org/pt-BR/docs/Web/CSS">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PYTHON">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>curso de pyhton</h4>
+                        <p>aprenda pyhton do zero</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PySimpleGUI">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>janela com PySimpleGUI</h4>
+                        <p>aprenda a criar uma janela simples , usando só PySimpleGUI</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=Ol3n_BR4v70&t=1533s">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PYTHON">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Lógica de programação com Python</h4>
+                        <p>curso feito pelo Gustavo Guanabara, nele se ensina do zero como codar em PYthon</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=2ezrkBvGdtg&list=PLQpSyz5rZmJpFVb1TidOflNMcVnpDdzAn">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PySimpleGUI">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>janela com PySimpleGUI</h4>
+                        <p>aprenda a criar uma janela simples , usando só PySimpleGUI</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=Ol3n_BR4v70&t=1533s">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PYTHON">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Lógica de programação com Python</h4>
+                        <p>curso feito pelo Gustavo Guanabara, nele se ensina do zero como codar em PYthon</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=2ezrkBvGdtg&list=PLQpSyz5rZmJpFVb1TidOflNMcVnpDdzAn">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PySimpleGUI">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>curso de PySimpleGUI</h4>
+                        <p>aprenda a desenvolver interfaces graficas com Python</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=fgqEPSQhM4Y&list=PLldtDp_gjtrfwk6zmXBIEy-FY_7qqHdfQ">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PySimpleGUI">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do PySimpleGUI</h4>
+                        <p>vejá a Ducumentação completa do PySimpleGUI, indo direto a fonte</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://docs.pysimplegui.com/en/latest/">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="PYTHON">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do Python</h4>
+                        <p>vejá a Ducumentação completa do Python, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://wiki.python.org/moin/PythonBooks">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="React">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do React</h4>
+                        <p>vejá a Ducumentação completa do React, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://legacy.reactjs.org/docs/getting-started.html">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="React">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de react js</h4>
+                        <p>aprenda a como da seus primeiros passos em react js </p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=KsFLXOTflsM&list=PLnex8IkmReXyNgtea8ly0Pn7Kk7Kavn9v">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Java">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do Java</h4>
+                        <p>vejá a Ducumentação completa do Java, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://docs.oracle.com/en/java/javase/23/">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="JAVA SCRIPT">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do Java script</h4>
+                        <p>vejá a Ducumentação completa do Java script, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="JAVA SCRIPT">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de  Java Script</h4>
+                        <p>aprenda a como da seus primeiros passos em JavaScript </p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=E1Ww5Y1EnWQ&list=PLnex8IkmReXxZEXje06kW1uCwm5iC8M_Z">
+                            <button>assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Node.js">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do Node.js</h4>
+                        <p>vejá a Ducumentação completa do Node.js, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://nodejs.org/api/all.html">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="TypScript">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do TypScript</h4>
+                        <p>vejá a Ducumentação completa do TypScript, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="C#">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Documentação do C#</h4>
+                        <p>vejá a Ducumentação completa do C#, indo direto ao site oficial</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://learn.microsoft.com/pt-br/dotnet/csharp/?WT.mc_id=dotnet-35129-website">
+                            <button>comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="C#">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de C#</h4>
+                        <p>Cursos desenvolvidos pela própria MicroSoft</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://dotnet.microsoft.com/pt-br/learn/csharp">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Node.js">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Node.js</h4>
+                        <p>Cursos de Node.js para iniciantes</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=LLqq6FemMNQ&list=PLJ_KhUnlXUPtbtLwaxxUxHqvcNQndmI4B">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Node.js">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Node.js</h4>
+                        <p>Cursos de Java-Script usando Node.js para iniciantes e avançados</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=lQAJ-T1QTYc&list=PL9tY_tDo_Q0C0hs1aGgtJbEH1EBlyzZdG">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="TypScript">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de TypScript</h4>
+                        <p>Mine Cursos de TypScript para iniciantes</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=mRixno_uE2o&list=PLlAbYrWSYTiPanrzauGa7vMuve7_vnXG_">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="TypScript">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de TypScript</h4>
+                        <p>Cursos completos de TypScript mais avançado</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=u7K1sdnCv5Y&list=PLb2HQ45KP0Wsk-p_0c6ImqBAEFEY-LU9H">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Android Studio">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;" alt="Documentação do Android Studio">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Documentação do Android Studio</h4>
+                        <p>Cursos completos sobre como utilizar a documentação do Android Studio de maneira eficiente.</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://developer.android.com/docs" target="_blank">
+                            <button>Comece a ler</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="curso" data-category="Android Studio Playlist">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;" alt="Playlist de Cursos Gratuitos sobre Android Studio">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Playlist de Cursos Gratuitos sobre Android Studio</h4>
+                        <p>Aprenda a desenvolver aplicativos Android de forma gratuita com esta playlist completa.</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/playlist?list=PLizN3WA8HR1zRVd-hATWHtEageHJ5XpCR" target="_blank">
+                            <button>Comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Design de Interfaces Android">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;" alt="Curso de Design de Interfaces para Android">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Design de Interfaces para Android</h4>
+                        <p>Aprenda a criar interfaces de usuário incríveis para aplicativos Android com este curso gratuito.</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/playlist?list=PLWz5rJ2EKKc9t-tlxBqx5kBUHu6pkT7uM" target="_blank">
+                            <button>Comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="HTML & CSS">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de HTML & CSS</h4>
+                        <p>Aprenda a criar sites incríveis com HTML & CSS.</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=0Pm6ex5HDGY&list=PL1dUY2RYa2RhNhm-QTuNIifVpc59wrpFP">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Curso Gratuito da Alura">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso Gratuito da Alura</h4>
+                        <p>Aprenda com os melhores! Inscreva-se agora no curso gratuito da Alura e desenvolva suas habilidades.</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.alura.com.br/curso-gratuito">
+                            <button>Inscrever-se</button>
+                        </a>
+                    </div>
+                </div>
+            </div>             
+            <div class="curso" data-category="CSS">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de CSS</h4>
+                        <p>Cursos completos de CSS com HTML e JS para iniciantes</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=0Pm6ex5HDGY&list=PL1dUY2RYa2RhNhm-QTuNIifVpc59wrpFP">
+                            <button>comece a assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div> 
+            <div class="curso" data-category="UX/UI">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de UI UX Design</h4>
+                        <p>Aprenda os fundamentos do design de UX/UI</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=W0bPsPHAjrQ&list=PLuDfCQO9tvX0kDmh4cjo30uidCeJ-iZE6">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Figma">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Figma app Design</h4>
+                        <p>Aprenda os princípios e técnicas do figma Design</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=oGD4ixajvs8&list=PLwgL9IEA0PxXzmOu0crRl9l6PT46nqtI9">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Documentação">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>estrutura de Documentação</h4>
+                        <p>Aprenda a criar e manter uma documentação de software eficaz</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=l9rdjLqmIVc">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="UML">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de UML</h4>
+                        <p>Aprenda a modelar sistemas de software com UML</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=sRyd7PHC-Ts&list=PLvSnBLKgRyHW-7VvbEx8oiXH2R21DSBG5">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="UML">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Introdução à UML</h4>
+                        <p>Entenda os conceitos básicos de UML e como aplicá-los</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=C3xYBT3o_5k&list=PLucm8g_ezqNqCRGHGHoacCo6N1bfN7hXZ">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Hardware">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Hardware</h4>
+                        <p>Aprenda os fundamentos do hardware e como montar um computador</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=iT6E92Kt38o&list=PLHz_AreHm4dn1JHgN9wpbIUhzZmycYQXW">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Servidores">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Servidores</h4>
+                        <p>Aprenda a configurar e gerenciar servidores</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=0af8nRZ0cHI&list=PLRKh8MgZXzW55c0106zxOGZhT8YQVx2-A">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Servidores">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>Curso de Administração de Servidores</h4>
+                        <p>Domine as habilidades de administração de servidores e infraestrutura</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=_g8yiabJqas&list=PLozhsZB1lLUPBmrvMXzsFxG34LwO9K8Pu">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="curso" data-category="Servidores">
+                <div class="imagem">
+                    <img src="img/OIP.jfif" style="width: 100%; height: 100%;">
+                </div>
+                <div class="conteudo">
+                    <div>
+                        <h4>CURSO DE REDES</h4>
+                        <p>Aprenda a gerenciar e otimizar servidores para desempenho máximo</p>
+                    </div>
+                    <div class="button-container">
+                        <a href="https://www.youtube.com/watch?v=8V1MeQ4LgbQ&list=PLF9vK2NfbRJtROPfTFQcJcB47STXDfYeX">
+                            <button>Assistir</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                                               
+        </div>
+        <div id="mensagem">
+            Desculpe, não consegui encontrar o que você queria buscar. Tente procurar outro assunto. Qualquer coisa, é só pedir para nosso suporte adicionar o que deseja.
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search');
+    const cursos = document.querySelectorAll('.curso');
+    const mensagem = document.getElementById('mensagem');
+    
+    searchInput.addEventListener('input', filterContent);
+    
+    function filterContent() {
+        const searchTerm = searchInput.value.toLowerCase();
+        let found = false;
+    
+        cursos.forEach(curso => {
+            const category = curso.getAttribute('data-category').toLowerCase();
+            if (category.includes(searchTerm)) {
+                curso.style.display = '';
+                found = true;
+            } else {
+                curso.style.display = 'none';
+            }
+        });
+    
+        if (!found) {
+            mensagem.style.display = 'block';
+        } else {
+            mensagem.style.display = 'none';
+        }
+    }
+    });
+    
+</script>
+</body>
+</html>

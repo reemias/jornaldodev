@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .profile-header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        .profile-details {
+            flex: 1;
+        }
+        .profile-details h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .profile-details p {
+            color: #999;
+        }
+        .profile-details .stats {
+            display: flex;
+            margin-top: 10px;
+        }
+        .profile-details .stats div {
+            margin-right: 20px;
+        }
+        .profile-details .stats div p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        .profile-details .stats div span {
+            color: #999;
+        }
+        .profile-bio {
+            padding: 20px;
+            background-color: #fff;
+            margin-top: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+        }
+        .profile-bio input[type="file"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .profile-bio input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .follow-button {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            padding: 10px;
+        }
+        .gallery .repo {
+            width: calc(33.333% - 10px);
+            margin: 5px;
+            height: 200px;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .gallery .repo i {
+            font-size: 50px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .gallery .repo p {
+            margin: 0;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="chat_app/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <h3><i class="fas fa-home"></i> Jornal do Dev</h3>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="profile-header">
+        <img src="img/support_10517261.png" alt="Foto de Perfil">
+        <div class="profile-details">
+            <h2>Nome do Usuário</h2>
+            <p>@nomeusuario</p>
+            <div class="stats">
+                <div>
+                    <p><strong>150</strong> <span>posts</span></p>
+                </div>
+                <div>
+                    <p><strong>300</strong> <span>seguidores</span></p>
+                </div>
+                <div>
+                    <p><strong>180</strong> <span>seguindo</span></p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: end;">
+                <button class="follow-button">Seguir</button>
+            </div>
+        </div>
+    </div>
+    <div class="profile-bio">
+        <input type="file" placeholder="Pasta de Arquivo de Código">
+        <input type="file" placeholder="Link do Repositório">
+    </div>
+    <div class="gallery">
+        <div class="repo">
+            <i class="fas fa-code"></i>
+            <p>Repositório 1</p>
+        </div>
+        <!--aqui vai ficar or arquivos e links-->
+    </div>
+</body>
+</html>

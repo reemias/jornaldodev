@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Sistema 1.0.10</title>
+    <link rel="stylesheet" href="/chat_app/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+                header {
+    background-color: #3b5998; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 10px 0; /* Espaçamento interno do cabeçalho */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Espaça igualmente os elementos */
+    align-items: center;
+    width: 100%;
+}
+
+.nav-buttons button {
+    background: none; /* Remove o fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    cursor: pointer; /* Adiciona o cursor de clique */
+    justify-content: end;
+    width: 50%;
+    font-size: 16px; /* Tamanho da fonte do botão */
+    width: 170px;
+}
+
+.nav-buttons button:hover {
+    color: #dfe3ee; /* Cor do texto quando o mouse está sobre o botão */
+}
+        .vaga p {
+            color: white;
+        }
+
+        .feed {
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        .post {
+            background: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            width: 100%;
+            height: auto;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post h3 {
+            margin-top: 0;
+            color: #ecf0f1;
+        }
+
+        .post p {
+            color: #bdc3c7;
+        }
+
+        .post button {
+            display: flex;
+            background: #2980b9;
+            text-decoration: none;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .post button:hover {
+            background: #3498db;
+        }
+
+        @media (max-width: 500px) {
+            header{
+                display: none;
+            }
+            .post {
+                width: 100%;
+                margin: 10px 0;
+                padding: 10px;
+            }
+            .chat-sidebar{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <h3><i class="fas fa-home"></i> Jornal do Dev</h3>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="feed">
+            <div class="post">
+                <div>
+                    <h3>Estagiário</h3>
+                    <p>
+                        Estamos procurando um estagiário em TI dedicado para se juntar à nossa equipe. O candidato ideal será apaixonado por tecnologia e terá interesse em aprender sobre suporte a sistemas operacionais, redes e hardware.
+                        Responsabilidades incluem auxílio no atendimento ao cliente, identificação e resolução de problemas técnicos, e manutenção de equipamentos.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.adzuna.com.br/details/4941084931" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div>
+                    <h3>Estagiário em TI</h3>
+                    <p>
+                        Estamos procurando um estagiário em TI dedicado para se juntar à nossa equipe. O candidato ideal será apaixonado por tecnologia e terá interesse em aprender sobre suporte a sistemas operacionais, redes e hardware.
+                        Responsabilidades incluem auxílio no atendimento ao cliente, identificação e resolução de problemas técnicos, e manutenção de equipamentos.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.adzuna.com.br/details/4941084931" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div>
+                    <h3>Assistente de Suporte em TI</h3>
+                    <p>
+                        Estamos procurando um assistente de suporte em TI talentoso para se juntar à nossa equipe. O candidato ideal será apaixonado por resolver problemas técnicos e terá experiência com suporte a sistemas operacionais, redes e hardware.
+                        Responsabilidades incluem atendimento ao cliente, identificação e resolução de problemas técnicos, e manutenção de equipamentos.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.vagas.com.br/vagas-de-suporte-ti" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div>
+                    <h3>Desenvolvedor de Banco de Dados</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor de banco de dados talentoso para se juntar à nossa equipe. O candidato ideal será apaixonado por criar soluções de dados robustas e escaláveis, e terá experiência com bancos de dados relacionais e não relacionais, como SQL e NoSQL.
+                        Responsabilidades incluem projetar, implementar e manter bancos de dados, garantindo a integridade e segurança dos dados.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.vagas.com.br/vagas-de-banco-de-dados" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="post">
+                <div>
+                    <h3>Front-end</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor front-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar interfaces de usuário dinâmicas e responsivas,
+                        e terá experiência com as tecnologias modernas de desenvolvimento web, incluindo HTML, CSS e JavaScript.
+                        Responsabilidades incluem colaborar com designers e desenvolvedores back-end para implementar novas funcionalidades
+                        e melhorar a experiência do usuário.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Back-end</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor back-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar sistemas robustos e escaláveis,
+                        e terá experiência com as tecnologias modernas de desenvolvimento, incluindo Node.js, Python e bancos de dados relacionais e não relacionais.
+                        Responsabilidades incluem colaborar com desenvolvedores front-end e de infraestrutura para implementar novas funcionalidades
+                        e otimizar o desempenho do sistema.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Desenvolvedor de Aplicativos Móveis</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor de aplicativos móveis talentoso para se juntar à nossa equipe.
+                        O candidato ideal terá experiência em criar aplicativos nativos para iOS e Android,
+                        utilizando linguagens como Swift e Kotlin.
+                        Responsabilidades incluem projetar e construir novos aplicativos,
+                        manter e melhorar os aplicativos existentes e colaborar com designers e outros desenvolvedores
+                        para garantir uma excelente experiência do usuário.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Back-end Senior</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor back-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar sistemas robustos e escaláveis,
+                        e terá experiência com as tecnologias modernas de desenvolvimento, incluindo Node.js, Python e bancos de dados relacionais e não relacionais.
+                        Responsabilidades incluem colaborar com desenvolvedores front-end e de infraestrutura para implementar novas funcionalidades
+                        e otimizar o desempenho do sistema.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Desenvolvedor React</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor back-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar sistemas robustos e escaláveis,
+                        e terá experiência com as tecnologias modernas de desenvolvimento, incluindo Node.js, Python e bancos de dados relacionais e não relacionais.
+                        Responsabilidades incluem colaborar com desenvolvedores front-end e de infraestrutura para implementar novas funcionalidades
+                        e otimizar o desempenho do sistema.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Front-End Junior</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor back-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar sistemas robustos e escaláveis,
+                        e terá experiência com as tecnologias modernas de desenvolvimento, incluindo Node.js, Python e bancos de dados relacionais e não relacionais.
+                        Responsabilidades incluem colaborar com desenvolvedores front-end e de infraestrutura para implementar novas funcionalidades
+                        e otimizar o desempenho do sistema.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+            <div class="post">
+                <div>
+                    <h3>Desenvolvedor .NET</h3>
+                    <p>
+                        Estamos procurando um desenvolvedor back-end talentoso para se juntar à nossa equipe.
+                        O candidato ideal será apaixonado por criar sistemas robustos e escaláveis,
+                        e terá experiência com as tecnologias modernas de desenvolvimento, incluindo Node.js, Python e bancos de dados relacionais e não relacionais.
+                        Responsabilidades incluem colaborar com desenvolvedores front-end e de infraestrutura para implementar novas funcionalidades
+                        e otimizar o desempenho do sistema.
+                    </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://www.exemplo.com/candidatar" style="text-decoration: none;">
+                        <button>Candidate-se</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <aside class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header" onclick="toggleChat()">Chat</div>
+            <div class="chat-content" id="chat-container">
+                <div class="pombo" >
+                    <p>Escreva "pesquise sobre" antes de digitar o que quer pesquisar.</p>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Pergunte alguma coisa...">
+                <button onclick="processInput()">Enviar</button>
+            </div>
+        </aside>
+        <script>
+            function toggleChat() {
+                const chatSidebar = document.getElementById('chat-sidebar');
+                chatSidebar.classList.toggle('active');
+            }
+        </script>
+        <script src="js.js"></script>
+    </main>
+</body>
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornal do Dev</title>
+    <link rel="stylesheet" href="postagem.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" href="img/chat_messages_14395.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <style>
+        /* Estilo para o letreiro */
+.marquee-container {
+    display: flex;
+    overflow: hidden;
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 13s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.marquee-content p,
+.marquee-content a {
+    display: inline;
+    margin: 0;
+    padding: 0 10px;
+    color: #fff;
+    text-decoration: none;
+}
+
+        /* Estilo dos balões de mensagem */
+.chat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+}
+
+/* Balão do usuário */
+.user-message {
+    align-self: flex-end;
+    background-color: #0078D4;
+    color: white;
+}
+
+/* Balão da IA */
+.ai-message {
+    align-self: flex-start;
+    background-color: #F1F1F1;
+    color: black;
+}
+
+/* Loader */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.loader span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0078D4;
+    animation: loader 0.6s infinite alternate;
+}
+
+@keyframes loader {
+    to {
+        opacity: 0.3;
+        transform: translateY(-10px);
+    }
+}
+
+.loader span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+        .chat_online {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo para o modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-conteudo {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.modal-conteudo, .fechar {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+
+.fechar {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.fechar:hover,
+.fechar:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+    <style>
+        .modal {
+            display: none; /* Esconder a modal inicialmente */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .loade {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
+        
+</head>
+<body>
+    <div class="real" style="background-color: #000; height: 100vh; width: 100wh; color: white; text-align: center;">
+        <img class="real" src="img/atenção.jpg" alt="" style="height: 100%; width: 100%;">
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <a href="index.html">
+                    <h3 style="color: white; text-decoration: none;"><i class="fas fa-home"></i>home</h3>
+                </a>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home" ></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main style="margin-top: 1px;">
+
+        <div class="left-sidebar">
+            <button onclick="clearLocalStorage()" style="margin: 10px; cursor: pointer; width: 90%;
+            background-color: rgb(5, 124, 15); color: white; border: none; padding: 10px; border-radius: 10px;">
+                Inscrever-se
+            </button>
+            <div class="marquee-container" style="width: 100%;">
+            <div class="marquee-content">
+                <p>seja bem vindo !</p>
+                <p>me siga no instagram:</p>
+                <a href="https://www.instagram.com/rohrona/" target="_blank"><button>acessar</button></a>
+                <p>também veja meu linkedin</p>
+                <a href="https://www.linkedin.com/in/ronaldo-reemias-b66b7a166/">
+                    <button>acessar</button>
+                </a>
+            </div>
+            </div>
+            
+                <a href="perfil.html" >
+                    <button style="text-decoration: none; background: none;
+                    margin: 10px; cursor: pointer;
+                    width: 100%;
+                background-color: rgb(59, 59, 122); color: white; border: none; padding: 10px; border-radius: 10px; ">Acessar Seu Perfil</button>
+                </a>
+            
+            
+                <br>
+            <div class="sidebar">
+                <h3 >Pessoas Online</h3>
+                <!-- Usuários online serão adicionados dinamicamente aqui -->
+            </div>
+            <br>
+            <a href="curriculo.html" style="text-decoration: none;">
+                <div class="curriculo" style="background-color: rgb(59, 63, 63); color: white; border-radius: 40px 30px 30px 0px;
+                text-align: center;">
+                <br>
+                    <p>aprenda a criar um curriculo</p>
+                    <br>
+                </div>
+                </a>
+        </div>
+
+        <div class="feed_noticias_publica" style="background: none; width: 70%; display: flex;
+        flex-direction: column;  align-items: center; margin-top: 1px;">
+
+            <div class="chat_online" style="margin-top: 1px;">
+                    <div class="barra" style="margin-top: 10px; background-color: rgb(252, 252, 252); display: flex;">
+                        <input style="background-color: rgb(230, 236, 236); color: rgb(14, 13, 13); width: 55%; border: solid 2px color(ba red green blue);" class="digitar" type="text" id="inputMensagem" placeholder="Poste alguma coisa.." required>
+                        <button id="botaoEnviar">Publicar</button>
+                        <input type="file" id="inputFoto" accept="image/*" class="custom-file-input" style="display: none;">
+                        <label class="custom-file-label" id="fotografia" for="inputFoto">
+                             Imagem
+                        </label>
+                        <input type="file" id="inputVideo" accept="video/*" class="custom-file-input" style="display: none;">
+                        <label class="custom-file-label" for="inputVideo" style="margin-inline-end: -40px;">
+                             vídeo
+                        </label>
+                    </div>
+                <div class="mensagens" id="chatMessages" style="margin-top: 10px;" >
+                    <!-- Mensagens serão adicionadas dinamicamente aqui -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="tools-sidebar">
+            
+            <div class="right-sidebar">
+                <h3>Pesquisar em I.A.s</h3>
+                <div class="ia-tool">
+                    <img src="img/chat-gpt.jfif" alt="ChatGPT" style="height: 20px; width: 20px;">
+                    <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
+                </div>
+                <div class="ia-tool">
+                    <img src="img/bing-ai.jfif" alt="Bing AI" style="height: 20px; width: 20px;">
+                    <a href="https://www.bing.com/new" target="_blank">Bing AI</a>
+                </div>
+                <div class="ia-tool">
+                    <img src="img/bard-ai.jfif" alt="Google Bard" style="height: 20px; width: 20px;">
+                    <a href="https://bard.google.com" target="_blank">Google Bard</a>
+                </div>
+            </div>
+            <h3>Ferramentas Úteis</h3>
+            <div class="tool">
+                <img src="img/guit.jfif" alt="GitHub" style="height: 20px; width: 20px;">
+                <a href="https://github.com" target="_blank">GitHub</a>
+            </div>
+            <div class="tool">
+                <img src="img/Stack Overflow.png" alt="Stack Overflow" style="height: 20px; width: 20px;">
+                <a href="https://stackoverflow.com" target="_blank">Stack Overflow</a>
+            </div>
+            <div class="tool">
+                <img src="img/CodePen.png" alt="CodePen" style="height: 20px; width: 20px;">
+                <a href="https://codepen.io" target="_blank">CodePen</a>
+            </div>
+            <div class="tool">
+                <img src="img/MDN Web Docs.png" alt="MDN Web Docs" style="height: 20px; width: 20px;">
+                <a href="https://developer.mozilla.org" target="_blank">MDN Web Docs</a>
+            </div>
+            <div class="tool">
+                <img src="img/Visual Studio Code.png" alt="Visual Studio Code" style="height: 20px; width: 20px;">
+                <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>
+            </div>
+            <div class="tool">
+                <img src="img/FreeCodeCamp.jfif" alt="FreeCodeCamp" style="height: 20px; width: 20px;">
+                <a href="https://www.freecodecamp.org/" target="_blank">FreeCodeCamp</a>
+            </div>
+            <div class="tool">
+                <img src="img/arrow_8678636.png" alt="GitLab" style="height: 20px; width: 20px;">
+                <a href="https://gitlab.com/" target="_blank">GitLab</a>
+            </div>
+        </div>
+        <aside class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header" onclick="toggleChat()">Chat</div>
+            <div class="chat-content" id="chat-container">
+                <div class="pombo">
+                    <p>Escreva "pesquise sobre" antes de digitar o que quer pesquisar.</p>
+                </div>
+                
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Pergunte alguma coisa...">
+                <button onclick="processInput()">Enviar</button>
+            </div>
+        </aside>
+    </main>
+     <!-- Modal -->
+     <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Digite seu nome de usuário e selecione uma foto de Perfil</h2>
+            <div style="display: flex;">
+                <p style="font-family: Cambria, ;">usuario :</p>
+                <input type="text" id="userNameInput" placeholder="Nome de usuário" style="height: 20px; margin: 12px;
+                background-color: #f8f8f8; color: rgb(0, 0, 0); border-radius: 10px;">
+            </div>
+            <p>FOTO : <input type="file" style="margin: 8px;" id="profileImageInput" accept="image/*"></p>
+            <button id="saveNameBtn" style="margin: 20px;">Salvar</button>
+        </div>
+    </div>
+    <div id="loadingModal" class="modal">
+        <div class="modal-content" style="display: flex; flex-direction: column; align-items: center;">
+            <h1>bem vindo ao jornal do dev</h1>
+            <div class="loade"></div>
+            <p>Carregando...</p>
+        </div>
+    </div>
+    <script src="teste.js"></script>
+    <script src="js.js"></script> 
+    <script>
+function toggleChat() {
+    const chatSidebar = document.getElementById('chat-sidebar');
+    const chatContent = document.getElementById('chat-container');
+    if (chatContent.classList.contains('hidden')) {
+        chatContent.classList.remove('hidden');
+    } else {
+        chatContent.classList.add('hidden');
+    }
+}
+function displayMessage(message, sender) {
+    const chatContainer = document.getElementById('chat-container');
+    const messageBubble = document.createElement('div');
+    messageBubble.className = sender === 'user' ? 'user-message message' : 'ai-message message';
+    messageBubble.innerHTML = message;
+    chatContainer.appendChild(messageBubble);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+       // Configuração do Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCo4H9k5dYt0H5VnQ5jQW3otVnNUshMwc8",
+    authDomain: "vagas-74cb2.firebaseapp.com",
+    databaseURL: "https://vagas-74cb2-default-rtdb.firebaseio.com",
+    projectId: "vagas-74cb2",
+    storageBucket: "vagas-74cb2.firebasestorage.app",
+    messagingSenderId: "973053917183",
+    appId: "1:973053917183:web:6c5f374a224a6f407359ca",
+    measurementId: "G-E6XM6SS83W"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Função para formatar texto com links
+function formatTextWithLinks(text) {
+    const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+    const formattedText = text.replace(urlPattern, (url) => {
+        const shortUrl = url.length > 30 ? `${url.slice(0, 30)}...` : url;
+        return `<a href="${url}" target="_blank">${shortUrl}</a>`;
+    });
+    return formattedText;
+}
+
+function isSupportedVideoFile(file) {
+    const supportedMimeTypes = [
+        'video/mp4',
+        'video/x-m4v',
+        'video/quicktime',
+        'video/webm',            // Common types for WebM
+        'video/ogg',             // Common types for Ogg
+        'video/x-msvideo',       // Common types for AVI
+        'video/x-flv',           // Common types for Flash Video
+        'video/x-matroska'       // Common types for MKV
+    ];
+
+    return supportedMimeTypes.includes(file.type);
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inputMensagem = document.getElementById('inputMensagem');
+    const botaoEnviar = document.getElementById('botaoEnviar');
+    const mensagensContainer = document.getElementById('chatMessages');
+    const inputFoto = document.getElementById('inputFoto');
+    const inputVideo = document.getElementById('inputVideo'); // Novo input para vídeos
+    const onlineUsersContainer = document.querySelector('.sidebar');
+    
+
+    // Função para adicionar uma postagem ao feed
+    function addPostToFeed(id, name, text, likes, profileImageUrl, timestamp, imageUrl, videoUrl) {
+        const postagemDiv = document.createElement('div');
+        postagemDiv.classList.add('postagem', 'card', 'mb-4');
+        postagemDiv.setAttribute('data-key', id);
+
+        const cardHeader = document.createElement('div');
+        cardHeader.classList.add('card-header', 'd-flex', 'align-items-center');
+        const userImg = document.createElement('img');
+        userImg.src = profileImageUrl;
+        userImg.classList.add('rounded-circle', 'mr-2');
+        const userNome = document.createElement('strong');
+        userNome.textContent = name;
+        const dateSpan = document.createElement('span');
+        dateSpan.classList.add('ml-auto');
+        dateSpan.textContent = new Date(timestamp).toLocaleString();
+        cardHeader.appendChild(userImg);
+        cardHeader.appendChild(userNome);
+        cardHeader.appendChild(dateSpan);
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        if (text) {
+            const textoP = document.createElement('p');
+            textoP.innerHTML = formatTextWithLinks(text);
+            cardBody.appendChild(textoP);
+        }
+
+        if (imageUrl) {
+            const fotoImg = document.createElement('img');
+            fotoImg.src = imageUrl;
+            fotoImg.classList.add('card-img-top', 'img-fluid', 'mb-2');
+            cardBody.appendChild(fotoImg);
+        }
+
+        if (videoUrl) {
+            const video = document.createElement('video');
+            video.src = videoUrl;
+            video.controls = true;
+            video.classList.add('card-img-top', 'img-fluid', 'mb-2');
+            cardBody.appendChild(video);
+        }
+
+        postagemDiv.appendChild(cardHeader);
+        postagemDiv.appendChild(cardBody);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('actionsDiv');
+
+        const likeButton = document.createElement('button');
+        likeButton.classList.add('btn', 'btn-light', 'like-button');
+        likeButton.innerHTML = '<span class="material-symbols-outlined like-icon">favorite</span> Curtir';
+
+        const likeCounter = document.createElement('span');
+        likeCounter.classList.add('like-counter');
+        likeCounter.textContent = `${likes} curtidas`;
+
+        likeButton.onclick = function() {
+            const postRef = database.ref('messages/' + id);
+            postRef.transaction(post => {
+                if (post) {
+                    post.likes = (post.likes || 0) + 1;
+                }
+                return post;
+            });
+        };
+
+        
+
+        const commentCount = document.createElement('span');
+        commentCount.classList.add('comment-counter');
+        database.ref(`messages/${id}/comentarios`).on('value', (snapshot) => {
+            const count = snapshot.numChildren();
+            commentCount.textContent = `${count} comentários`;
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
+
+        // Cria o ícone de lixeira
+        const deleteIcon = document.createElement('span');
+        deleteIcon.classList.add('material-symbols-outlined');
+        deleteIcon.textContent = 'delete';
+
+        // Adiciona o ícone ao botão
+        deleteButton.appendChild(deleteIcon);
+
+        deleteButton.onclick = function() {
+            if (confirm('Tem certeza que deseja excluir esta postagem?')) {
+                database.ref('messages/' + id).remove();
+            }
+        };
+
+        actionsDiv.appendChild(likeButton);
+        actionsDiv.appendChild(likeCounter);
+        actionsDiv.appendChild(commentCount);
+        actionsDiv.appendChild(deleteButton);
+
+        const commentSection = document.createElement('div');
+        commentSection.classList.add('comment-section', 'mt-3');
+        const commentInputGroup = document.createElement('div');
+        commentInputGroup.classList.add('input-group');
+        const commentInput = document.createElement('input');
+        commentInput.classList.add('form-control', 'comment-input');
+        commentInput.placeholder = 'Escreva um comentário...';
+        const postCommentButton = document.createElement('div');
+        postCommentButton.classList.add('input-group-append');
+        const commentButton = document.createElement('button');
+        commentButton.classList.add('btn', 'btn-primary');
+        commentButton.innerHTML = 'Comentar';
+        postCommentButton.appendChild(commentButton);
+        commentInputGroup.appendChild(commentInput);
+        commentInputGroup.appendChild(postCommentButton);
+
+        commentButton.onclick = function() {
+            enviarComentario(id, commentInput.value);
+            commentInput.value = '';
+        };
+
+        cardBody.appendChild(actionsDiv);
+        cardBody.appendChild(commentSection);
+        cardBody.appendChild(commentInputGroup);
+
+        postagemDiv.appendChild(cardBody);
+        mensagensContainer.prepend(postagemDiv);
+
+        database.ref(`messages/${id}/comentarios`).on('child_added', (snapshot) => {
+    const comentario = snapshot.val();
+    const commentDiv = document.createElement('div');
+    commentDiv.classList.add('comment', 'mt-2');
+
+    const commentHeader = document.createElement('div');
+    commentHeader.classList.add('comment-header');
+
+    const commentAvatar = document.createElement('img');
+
+    const commentName = document.createElement('strong');
+    commentName.textContent = comentario.name;
+
+    
+    commentHeader.appendChild(commentName);
+
+    const commentText = document.createElement('div');
+    commentText.classList.add('comment-text');
+    commentText.textContent = comentario.text;
+
+    commentDiv.appendChild(commentHeader);
+    commentDiv.appendChild(commentText);
+    commentSection.appendChild(commentDiv);
+});
+
+    }
+
+    botaoEnviar.addEventListener('click', () => {
+        const userName = localStorage.getItem('userName') || 'Anônimo';
+        const profileImageUrl = localStorage.getItem('profileImageUrl') || 'default-profile.png';
+        const message = {
+            name: userName,
+            text: inputMensagem.value,
+            likes: 0,
+            profileImageUrl: profileImageUrl,
+            timestamp: Date.now(),
+            imageUrl: null,
+            videoUrl: null
+        };
+
+        if (inputFoto.files.length > 0) {
+            // Código existente para imagens...
+        } else if (inputVideo.files.length > 0) {
+            const file = inputVideo.files[0];
+            if (isSupportedVideoFile(file)) {
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    message.videoUrl = e.target.result;
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                            inputVideo.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                };
+                fileReader.readAsDataURL(file);
+            } else {
+                alert('Formato de vídeo não suportado. Por favor, envie um vídeo MP4.');
+            }
+        } else {
+            if (inputMensagem.value.trim() !== "") {
+                database.ref('messages').push(message)
+                    .then(() => {
+                        inputMensagem.value = '';
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao enviar a mensagem:", error);
+                    });
+            }
+        }
+    });
+
+    inputMensagem.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            botaoEnviar.click();
+        }
+    });
+
+    const postsRef = database.ref('messages');
+    postsRef.on('child_added', (snapshot) => {
+        const post = snapshot.val();
+        const timestamp = post.timestamp || Date.now();
+        const profileImageUrl = post.profileImageUrl || 'default-profile.png';
+        const imageUrl = post.imageUrl || null;
+        const videoUrl = post.videoUrl || null; // Adiciona o campo para a URL do vídeo
+        addPostToFeed(snapshot.key, post.name, post.text, post.likes || 0, profileImageUrl, timestamp, imageUrl, videoUrl);
+    });
+
+    postsRef.on('child_changed', (snapshot) => {
+        const post = snapshot.val();
+        const postagemDiv = document.querySelector(`[data-key="${snapshot.key}"]`);
+        if (postagemDiv) {
+            const likeCount = postagemDiv.querySelector('.like-counter');
+            likeCount.textContent = `${post.likes} curtidas`;
+        }
+    });
+
+        // Função para atualizar a lista de usuários online
+        function updateOnlineUsers(users) {
+        onlineUsersContainer.innerHTML = '<h3>Pessoas Online</h3>';
+        users.forEach(user => {
+            const userDiv = document.createElement('div');
+            userDiv.classList.add('online-user');
+
+            const userImg = document.createElement('img');
+            userImg.src = user.profileImageUrl || 'https://via.placeholder.com/40';
+            userImg.alt = user.name;
+
+            const userName = document.createElement('span');
+            userName.textContent = user.name;
+
+            userDiv.appendChild(userImg);
+            userDiv.appendChild(userName);
+            onlineUsersContainer.appendChild(userDiv);
+        });
+    }
+
+    // Simula a atualização da lista de usuários online
+    function fetchOnlineUsers() {
+        // Exemplo de usuários online, você pode substituir esta parte com uma chamada real ao seu backend
+        const onlineUsers = [
+            { name: 'Ana Silva', profileImageUrl: 'img/pessoa 2.jfif' },
+            { name: 'Carlos Sousa', profileImageUrl: 'img/pessoa 1.jfif' },
+            { name: 'Maria Oliveira', profileImageUrl: '' }
+        ];
+
+        updateOnlineUsers(onlineUsers);
+    }
+
+    // Atualiza a lista de usuários online a cada 10 segundos
+    setInterval(fetchOnlineUsers, 10000);
+});
+
+// Função para enviar comentários
+function enviarComentario(postId, comentarioText) {
+    const userName = localStorage.getItem('userName') || 'Anônimo';
+    const comentario = {
+        name: userName,
+        text: comentarioText
+    };
+
+    database.ref(`messages/${postId}/comentarios`).push(comentario)
+        .catch((error) => {
+            console.error("Erro ao enviar o comentário:", error);
+        });
+}
+
+function clearLocalStorage() {
+    localStorage.clear();
+
+    // Primeira atualização após 1 segundo
+    setTimeout(function() {
+        location.reload();
+    }, 1000);
+
+}
+
+
+// Modal para o nome do usuário
+const modal = document.getElementById('nameModal');
+const span = document.getElementsByClassName('close')[0];
+const saveNameBtn = document.getElementById('saveNameBtn');
+const userNameInput = document.getElementById('userNameInput');
+const profileImageInput = document.getElementById('profileImageInput');
+
+span.onclick = function() {
+    modal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+saveNameBtn.onclick = function() {
+    const userName = userNameInput.value.trim();
+    const profileImageFile = profileImageInput.files[0];
+
+    if (userName !== '' && profileImageFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('profileImageUrl', e.target.result);
+            modal.style.display = 'none';
+        }
+        reader.readAsDataURL(profileImageFile);
+    }
+}
+
+if (!localStorage.getItem('userName')) {
+    modal.style.display = 'block';
+}
+
+</script>
+<script src="teste.js"></script>
+</body>
+</html>

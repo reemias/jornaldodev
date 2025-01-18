@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornal do Dev</title>
+    <link rel="icon" href="img/chat_messages_14395.png" type="image/png">
+    <link rel="stylesheet" href="/chat_app/style.css">
+    <style>
+       /* Geral */
+body {
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Carregando as bibliotecas Firebase para uso no navegador -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+</head>
+<body >
+    <header>
+        <div class="header-content">
+            <div class="modelo_titulo">
+                <h3><i class="fas fa-home"></i> Rede social para Dev</h3>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html">
+                    <button><i class="fas fa-home"></i> Home</button>
+                </a>
+                <a href="vagas.html">
+                    <button><i class="fas fa-briefcase"></i> Vagas</button>
+                </a>
+                <a href="cursos.html">
+                    <button><i class="fas fa-graduation-cap"></i> Cursos</button>
+                </a>
+                <a href="boot-camp.html">
+                    <button><i class="fas fa-laptop-code"></i> Boot-camps</button>
+                </a>
+                <a href="editor.html">
+                    <button><i class="fas fa-code"></i> Editor de Script</button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" id="inputMensagem" class="form-control" placeholder="O que você está pensando?" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-success" id="botaoEnviar">
+                                    <span class="material-symbols-outlined">send_and_archive</span> Publicar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+                                <input type="file" id="inputFoto" accept="image/*" class="custom-file-input">
+                                <label class="custom-file-label" for="inputFoto">
+                                    <span class="material-symbols-outlined">image</span> Escolher imagem
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <main id="chatMessages" class="mt-4">
+                    <!-- Postagens serão adicionadas dinamicamente aqui -->
+                </main>
+            </div>
+        </div>
+    </div>
+    <aside class="chat-sidebar" id="chat-sidebar">
+        <div class="chat-header" onclick="toggleChat()">Chat com I.A</div>
+        <div class="chat-content" id="chat-container">
+            <div class="pombo">
+                <p>Escreva "pesquise sobre" antes de digitar o que quer pesquisar.</p>
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Pergunte alguma coisa...">
+            <button onclick="processInput()">Enviar</button>
+        </div>
+    </aside>
+    <!-- Modal -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Digite seu nome de usuário e selecione uma foto de Perfil</h2>
+            <div style="display: flex;">
+                <p style="font-family: Cambria, ;">usuario :</p>
+                <input type="text" id="userNameInput" placeholder="Nome de usuário" style="height: 20px; margin: 12px;
+                background-color: #f8f8f8; color: rgb(0, 0, 0); border-radius: 10px;">
+            </div>
+            <input type="file" style="margin: 8px;" id="profileImageInput" accept="image/*">
+            <button id="saveNameBtn" style="margin: 20px;">Salvar</button>
+        </div>
+    </div>
+    
+    <script defer src="/chat_app/script.js"></script>
+    <script>
+       function toggleChat() {
+        const chatSidebar = document.getElementById('chat-sidebar');
+        if (chatSidebar.classList.contains('active')) {
+            chatSidebar.classList.remove('active');
+            chatSidebar.classList.add('inactive');
+        } else {
+            chatSidebar.classList.remove('inactive');
+            chatSidebar.classList.add('active');
+        }
+    }
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyCo4H9k5dYt0H5VnQ5jQW3otVnNUshMwc8",
+        authDomain: "vagas-74cb2.firebaseapp.com",
+        databaseURL: "https://vagas-74cb2-default-rtdb.firebaseio.com",
+        projectId: "vagas-74cb2",
+        storageBucket: "vagas-74cb2.firebasestorage.app",
+        messagingSenderId: "973053917183",
+        appId: "1:973053917183:web:6c5f374a224a6f407359ca",
+        measurementId: "G-E6XM6SS83W"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputMensagem = document.getElementById('inputMensagem');
+        const botaoEnviar = document.getElementById('botaoEnviar');
+        const mensagensContainer = document.getElementById('chatMessages');
+        const inputFoto = document.getElementById('inputFoto');
+
+        // Função para adicionar uma postagem ao feed
+        function addPostToFeed(id, name, text, likes, profileImageUrl, timestamp, imageUrl) {
+            const postagemDiv = document.createElement('div');
+            postagemDiv.classList.add('postagem', 'card', 'mb-4');
+
+            const cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header', 'd-flex', 'align-items-center');
+            const userImg = document.createElement('img');
+            userImg.src = profileImageUrl;
+            userImg.classList.add('rounded-circle', 'mr-2');
+            const userNome = document.createElement('strong');
+            userNome.textContent = name;
+            cardHeader.appendChild(userImg);
+            cardHeader.appendChild(userNome);
+
+            const cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+
+            if (text) {
+                const textoP = document.createElement('p');
+                textoP.textContent = text;
+                cardBody.appendChild(textoP);
+            }
+
+            if (imageUrl) {
+                const fotoImg = document.createElement('img');
+                fotoImg.src = imageUrl;
+                fotoImg.classList.add('card-img-top', 'img-fluid', 'mb-2');
+                cardBody.appendChild(fotoImg);
+            }
+
+            postagemDiv.appendChild(cardHeader);
+            postagemDiv.appendChild(cardBody);
+
+            // Adicionando seção de curtidas e comentários
+            const actionsDiv = document.createElement('div');
+            actionsDiv.classList.add('d-flex', 'justify-content-between', 'mt-3', 'border-top', 'pt-2');
+
+            // Botão de curtir
+            const likeButton = document.createElement('button');
+            likeButton.classList.add('btn', 'btn-light', 'like-button');
+            likeButton.innerHTML = '<span class="material-symbols-outlined like-icon">favorite</span> Curtir';
+
+            // Contador de curtidas
+            const likeCounter = document.createElement('span');
+            likeCounter.classList.add('like-counter');
+            likeCounter.textContent = `${likes} curtidas`;
+
+            likeButton.onclick = function() {
+                const postRef = database.ref('messages/' + id);
+                postRef.transaction(post => {
+                    if (post) {
+                        post.likes = (post.likes || 0) + 1;
+                    }
+                    return post;
+                });
+            };
+
+            // Botão de compartilhar
+            const shareButton = document.createElement('button');
+            shareButton.classList.add('btn', 'btn-light', 'share-button');
+            shareButton.innerHTML = '<span class="material-symbols-outlined">share</span> Republicar';
+
+            shareButton.onclick = function() {
+                addPostToFeed(id, name, text, likes, profileImageUrl, timestamp, imageUrl);
+            };
+
+            actionsDiv.appendChild(likeButton);
+            actionsDiv.appendChild(shareButton);
+            actionsDiv.appendChild(likeCounter);
+
+            // Seção de comentários
+            const commentSection = document.createElement('div');
+            commentSection.classList.add('comment-section', 'mt-3');
+            const commentInputGroup = document.createElement('div');
+            commentInputGroup.classList.add('input-group');
+            const commentInput = document.createElement('input');
+            commentInput.classList.add('form-control', 'comment-input');
+            commentInput.placeholder = 'Escreva um comentário...';
+            const postCommentButton = document.createElement('div');
+            postCommentButton.classList.add('input-group-append');
+            const commentButton = document.createElement('button');
+            commentButton.classList.add('btn', 'btn-primary');
+            commentButton.innerHTML = 'Comentar';
+            postCommentButton.appendChild(commentButton);
+            commentInputGroup.appendChild(commentInput);
+            commentInputGroup.appendChild(postCommentButton);
+
+            commentButton.onclick = function() {
+                const commentText = commentInput.value;
+                if (commentText) {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.classList.add('comment', 'mt-2', 'border-top', 'pt-2');
+                    commentDiv.textContent = commentText;
+                    commentSection.appendChild(commentDiv);
+                    commentInput.value = '';
+                }
+            };
+
+            cardBody.appendChild(actionsDiv);
+            cardBody.appendChild(commentSection);
+            cardBody.appendChild(commentInputGroup);
+            postagemDiv.appendChild(cardBody);
+            mensagensContainer.prepend(postagemDiv);
+        }
+
+        botaoEnviar.addEventListener('click', () => {
+            const userName = localStorage.getItem('userName') || 'Anônimo';
+            const profileImageUrl = localStorage.getItem('profileImageUrl') || 'default-profile.png';
+            const message = {
+                name: userName,
+                text: inputMensagem.value,
+                likes: 0,
+                profileImageUrl: profileImageUrl,
+                timestamp: Date.now(),
+                imageUrl: null
+            };
+
+            if (inputFoto.files.length > 0) {
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    message.imageUrl = e.target.result;
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                            inputFoto.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                };
+                fileReader.readAsDataURL(inputFoto.files[0]);
+            } else {
+                if (inputMensagem.value.trim() !== "") {
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                }
+            }
+        });
+
+        inputMensagem.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                botaoEnviar.click();
+            }
+        });
+
+        const postsRef = database.ref('messages');
+        postsRef.on('child_added', (snapshot) => {
+            const post = snapshot.val();
+            const timestamp = post.timestamp || Date.now();
+            const profileImageUrl = post.profileImageUrl || 'default-profile.png';
+            const imageUrl = post.imageUrl || null;
+            addPostToFeed(snapshot.key, post.name, post.text, post.likes || 0, profileImageUrl, timestamp, imageUrl);
+        });
+
+        postsRef.on('child_changed', (snapshot) => {
+            const post = snapshot.val();
+            const postagemDiv = document.getElementById(`post-${snapshot.key}`);
+            const likeCount = postagemDiv.querySelector('.like-counter');
+            likeCount.textContent = `${post.likes} curtidas`;
+        });
+
+        const modal = document.getElementById('nameModal');
+        const span = document.getElementsByClassName('close')[0];
+        const saveNameBtn = document.getElementById('saveNameBtn');
+        const userNameInput = document.getElementById('userNameInput');
+        const profileImageInput = document.getElementById('profileImageInput');
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        saveNameBtn.onclick = function() {
+            const userName = userNameInput.value.trim();
+            const profileImageFile = profileImageInput.files[0];
+
+            if (userName !== '' && profileImageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('userName', userName);
+                    localStorage.setItem('profileImageUrl', e.target.result);
+                    modal.style.display = 'none';
+                }
+                reader.readAsDataURL(profileImageFile);
+            }
+        }
+
+        if (!localStorage.getItem('userName')) {
+            modal.style.display = 'block';
+        }
+    });
+
+    // Função para enviar comentários
+    function enviarComentario(postId) {
+        const userName = localStorage.getItem('userName') || 'Anônimo';
+        const comentarioInput = document.getElementById(`comentario-input-${postId}`);
+        const comentarioText = comentarioInput.value.trim();
+
+        if (comentarioText !== "") {
+            const comentario = {
+                name: userName,
+                text: comentarioText
+            };
+
+            database.ref(`messages/${postId}/comentarios`).push(comentario)
+                .then(() => {
+                    comentarioInput.value = '';
+                })
+                .catch((error) => {
+                    console.error("Erro ao enviar o comentário:", error);
+                });
+        }
+    }
+    </script>
+</body>
+</html>

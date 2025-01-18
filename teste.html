@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat e Perfis</title>
+    <style>
+        .modal {
+            display: none; /* Esconder a modal inicialmente */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fullscreen-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Modal de carregamento -->
+<div id="loadingModal" class="modal">
+    <div class="modal-content">
+        <div class="loader"></div>
+        <p>Carregando...</p>
+    </div>
+</div>
+
+<!-- Modal para o nome do usuário -->
+<div id="nameModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Insira seu nome e foto de perfil</h2>
+        <input type="text" id="userNameInput" placeholder="Seu nome">
+        <input type="file" id="profileImageInput" accept="image/*">
+        <button id="saveNameBtn">Salvar</button>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const loadingModal = document.getElementById("loadingModal");
+
+        // Mostrar a barra de carregamento
+        loadingModal.style.display = "flex";
+
+        // Funções para carregar componentes
+        function carregarPerfis() {
+            console.log("Perfis carregados");
+        }
+
+        function carregarMensagens() {
+            console.log("Mensagens carregadas");
+        }
+
+        function carregarOutrosComponentes() {
+            console.log("Outros componentes carregados");
+        }
+
+        // Simular carregamento de componentes
+        setTimeout(function() {
+            carregarPerfis();
+            carregarMensagens();
+            carregarOutrosComponentes();
+
+            // Esconder a barra de carregamento após todos os componentes serem carregados
+            loadingModal.style.display = "none";
+        }, 10000); // Tempo de carregamento simulado (10 segundos)
+    });
+
+    function toggleChat() {
+        const chatSidebar = document.getElementById('chat-sidebar');
+        const chatContent = document.getElementById('chat-container');
+        if (chatContent.classList.contains('hidden')) {
+            chatContent.classList.remove('hidden');
+        } else {
+            chatContent.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Função para abrir a imagem em tela cheia
+        function openFullscreenImage(imageUrl) {
+            const fullscreenContainer = document.createElement('div');
+            fullscreenContainer.classList.add('fullscreen-container');
+
+            const fullscreenImage = document.createElement('img');
+            fullscreenImage.src = imageUrl;
+            fullscreenImage.classList.add('fullscreen-image');
+
+            // Fechar imagem em tela cheia ao clicar
+            fullscreenContainer.onclick = function() {
+                document.body.removeChild(fullscreenContainer);
+            };
+
+            fullscreenContainer.appendChild(fullscreenImage);
+            document.body.appendChild(fullscreenContainer);
+
+            return fullscreenContainer;
+        }
+
+        function addSwipeListeners(fullscreenContainer, currentImageIndex, imageUrls) {
+            let startX;
+
+            fullscreenContainer.addEventListener('touchstart', (event) => {
+                startX = event.touches[0].clientX;
+            });
+
+            fullscreenContainer.addEventListener('touchmove', (event) => {
+                const currentX = event.touches[0].clientX;
+                const diffX = startX - currentX;
+
+                if (diffX > 50) { // Deslizar para a esquerda
+                    currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
+                    fullscreenContainer.querySelector('img').src = imageUrls[currentImageIndex];
+                } else if (diffX < -50) { // Deslizar para a direita
+                    currentImageIndex = (currentImageIndex - 1 + imageUrls.length) % imageUrls.length;
+                    fullscreenContainer.querySelector('img').src = imageUrls[currentImageIndex];
+                }
+            });
+        }
+
+        document.querySelectorAll('.postagem img').forEach((image) => {
+            image.addEventListener('click', () => {
+                // Supondo que você tenha uma lista de URLs das imagens do banco de dados
+                const imageUrls = [...document.querySelectorAll('.postagem img')].map(img => img.src);
+                const currentImageIndex = imageUrls.indexOf(image.src);
+                
+                const fullscreenContainer = openFullscreenImage(image.src);
+                addSwipeListeners(fullscreenContainer, currentImageIndex, imageUrls);
+            });
+        });
+
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCo4H9k5dYt0H5VnQ5jQW3otVnNUshMwc8",
+            authDomain: "vagas-74cb2.firebaseapp.com",
+            databaseURL: "https://vagas-74cb2-default-rtdb.firebaseio.com",
+            projectId: "vagas-74cb2",
+            storageBucket: "vagas-74cb2.firebasestorage.app",
+            messagingSenderId: "973053917183",
+            appId: "1:973053917183:web:6c5f374a224a6f407359ca",
+            measurementId: "G-E6XM6SS83W"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Função para formatar texto com links
+        function formatTextWithLinks(text) {
+            const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+            const formattedText = text.replace(urlPattern, (url) => {
+                const shortUrl = url.length > 30 ? `${url.slice(0, 30)}...` : url;
+                return `<a href="${url}" target="_blank">${shortUrl}</a>`;
+            });
+            return formattedText;
+        }
+
+        const inputMensagem = document.getElementById('inputMensagem');
+        const botaoEnviar = document.getElementById('botaoEnviar');
+        const mensagensContainer = document.getElementById('chatMessages');
+        const inputFoto = document.getElementById('inputFoto');
+        const inputVideo = document.getElementById('inputVideo'); // Novo input para vídeos
+        const onlineUsersContainer = document.querySelector('.sidebar');
+
+        // Função para adicionar uma postagem ao feed
+        function addPostToFeed(id, name, text, likes, profileImageUrl, timestamp, imageUrl, videoUrl) {
+            const postagemDiv = document.createElement('div');
+            postagemDiv.classList.add('postagem', 'card', 'mb-4');
+            postagemDiv.setAttribute('data-key', id);
+
+            const cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header', 'd-flex', 'align-items-center');
+            const userImg = document.createElement('img');
+            userImg.src = profileImageUrl;
+            userImg.classList.add('rounded-circle', 'mr-2');
+            const userNome = document.createElement('strong');
+            userNome.textContent = name;
+            const dateSpan = document.createElement('span');
+            dateSpan.classList.add('ml-auto');
+            dateSpan.textContent = new Date(timestamp).toLocaleString();
+            cardHeader.appendChild(userImg);
+            cardHeader.appendChild(userNome);
+            cardHeader.appendChild(dateSpan);
+
+            const cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+
+            if (text) {
+                const textoP = document.createElement('p');
+                textoP.innerHTML = formatTextWithLinks(text);
+                cardBody.appendChild(textoP);
+            }
+
+            if (imageUrl) {
+                const fotoImg = document.createElement('img');
+                fotoImg.src = imageUrl;
+                fotoImg.classList.add('card-img-top', 'img-fluid', 'mb-2');
+                cardBody.appendChild(fotoImg);
+            }
+
+            if (videoUrl) {
+                const video = document.createElement('video');
+                video.src = videoUrl;
+                video.controls = true;
+                video.classList.add('card-img-top', 'img-fluid', 'mb-2');
+                cardBody.appendChild(video);
+            }
+
+            postagemDiv.appendChild(cardHeader);
+            postagemDiv.appendChild(cardBody);
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.classList.add('actionsDiv');
+
+            const likeButton = document.createElement('button');
+            likeButton.classList.add('btn', 'btn-light', 'like-button');
+            likeButton.innerHTML = '<span class="material-symbols-outlined like-icon">favorite</span> Curtir';
+
+            const likeCounter = document.createElement('span');
+            likeCounter.classList.add('like-counter');
+            likeCounter.textContent = `${likes} curtidas`;
+
+            likeButton.onclick = function() {
+                const postRef = database.ref('messages/' + id);
+                postRef.transaction(post => {
+                    if (post) {
+                        post.likes = (post.likes || 0) + 1;
+                    }
+                    return post;
+                });
+            };
+
+            const commentCount = document.createElement('span');
+            commentCount.classList.add('comment-counter');
+            database.ref(`messages/${id}/comentarios`).on('value', (snapshot) => {
+                const count = snapshot.numChildren();
+                commentCount.textContent = `${count} comentários`;
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('btn', 'btn-danger', 'ml-2');
+
+            const deleteIcon = document.createElement('span');
+            deleteIcon.classList.add('material-symbols-outlined');
+            deleteIcon.textContent = 'delete';
+
+            deleteButton.appendChild(deleteIcon);
+
+            deleteButton.onclick = function() {
+                if (confirm('Tem certeza que deseja excluir esta postagem?')) {
+                    database.ref('messages/' + id).remove();
+                }
+            };
+
+            actionsDiv.appendChild(likeButton);
+            actionsDiv.appendChild(likeCounter);
+            actionsDiv.appendChild(commentCount);
+            actionsDiv.appendChild(deleteButton);
+
+            const commentSection = document.createElement('div');
+            commentSection.classList.add('comment-section', 'mt-3');
+            const commentInputGroup = document.createElement('div');
+            commentInputGroup.classList.add('input-group');
+            const commentInput = document.createElement('input');
+            commentInput.classList.add('form-control', 'comment-input');
+            commentInput.placeholder = 'Escreva um comentário...';
+            const postCommentButton = document.createElement('div');
+            postCommentButton.classList.add('input-group-append');
+            const commentButton = document.createElement('button');
+            commentButton.classList.add('btn', 'btn-primary');
+            commentButton.innerHTML = 'Comentar';
+            postCommentButton.appendChild(commentButton);
+            commentInputGroup.appendChild(commentInput);
+            commentInputGroup.appendChild(postCommentButton);
+
+            commentButton.onclick = function() {
+                enviarComentario(id, commentInput.value);
+                commentInput.value = '';
+            };
+
+            cardBody.appendChild(actionsDiv);
+            cardBody.appendChild(commentSection);
+            cardBody.appendChild(commentInputGroup);
+
+            postagemDiv.appendChild(cardBody);
+            mensagensContainer.prepend(postagemDiv);
+
+            database.ref(`messages/${id}/comentarios`).on('child_added', (snapshot) => {
+                const comentario = snapshot.val();
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment', 'mt-2', 'border-top', 'pt-2');
+                commentDiv.textContent = `${comentario.name}: ${comentario.text}`;
+                commentSection.appendChild(commentDiv);
+            });
+        }
+
+        botaoEnviar.addEventListener('click', () => {
+            const userName = localStorage.getItem('userName') || 'Anônimo';
+            const profileImageUrl = localStorage.getItem('profileImageUrl') || 'default-profile.png';
+            const message = {
+                name: userName,
+                text: inputMensagem.value,
+                likes: 0,
+                profileImageUrl: profileImageUrl,
+                timestamp: Date.now(),
+                imageUrl: null,
+                videoUrl: null
+            };
+
+            if (inputFoto.files.length > 0) {
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    message.imageUrl = e.target.result;
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                            inputFoto.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                };
+                fileReader.readAsDataURL(inputFoto.files[0]);
+            } else if (inputVideo.files.length > 0) {
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    message.videoUrl = e.target.result;
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                            inputVideo.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                };
+                fileReader.readAsDataURL(inputVideo.files[0]);
+            } else {
+                if (inputMensagem.value.trim() !== "") {
+                    database.ref('messages').push(message)
+                        .then(() => {
+                            inputMensagem.value = '';
+                        })
+                        .catch((error) => {
+                            console.error("Erro ao enviar a mensagem:", error);
+                        });
+                }
+            }
+        });
+
+        inputMensagem.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                botaoEnviar.click();
+            }
+        });
+
+        const postsRef = database.ref('messages');
+        postsRef.on('child_added', (snapshot) => {
+            const post = snapshot.val();
+            const timestamp = post.timestamp || Date.now();
+            const profileImageUrl = post.profileImageUrl || 'default-profile.png';
+            const imageUrl = post.imageUrl || null;
+            const videoUrl = post.videoUrl || null;
+            addPostToFeed(snapshot.key, post.name, post.text, post.likes || 0, profileImageUrl, timestamp, imageUrl, videoUrl);
+        });
+
+        postsRef.on('child_changed', (snapshot) => {
+            const post = snapshot.val();
+            const postagemDiv = document.querySelector(`[data-key="${snapshot.key}"]`);
+            if (postagemDiv) {
+                const likeCount = postagemDiv.querySelector('.like-counter');
+                likeCount.textContent = `${post.likes} curtidas`;
+            }
+        });
+
+        function updateOnlineUsers(users) {
+            onlineUsersContainer.innerHTML = '<h3>Pessoas Online</h3>';
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('online-user');
+
+                const userImg = document.createElement('img');
+                userImg.src = user.profileImageUrl || 'https://via.placeholder.com/40';
+                userImg.alt = user.name;
+
+                const userName = document.createElement('span');
+                userName.textContent = user.name;
+
+                userDiv.appendChild(userImg);
+                userDiv.appendChild(userName);
+                onlineUsersContainer.appendChild(userDiv);
+            });
+        }
+
+        function fetchOnlineUsers() {
+            const onlineUsers = [
+                { name: 'Ana Silva', profileImageUrl: 'img/pessoa 2.jfif' },
+                { name: 'Carlos Sousa', profileImageUrl: 'img/pessoa 1.jfif' },
+                { name: 'Maria Oliveira', profileImageUrl: '' }
+            ];
+
+            updateOnlineUsers(onlineUsers);
+        }
+
+        setInterval(fetchOnlineUsers, 10000);
+
+        function enviarComentario(postId, comentarioText) {
+            const userName = localStorage.getItem('userName') || 'Anônimo';
+            const comentario = {
+                name: userName,
+                text: comentarioText
+            };
+
+            database.ref(`messages/${postId}/comentarios`).push(comentario)
+                .catch((error) => {
+                    console.error("Erro ao enviar o comentário:", error);
+                });
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
+        }
+
+        const modal = document.getElementById('nameModal');
+        const span = document.getElementsByClassName('close')[0];
+        const saveNameBtn = document.getElementById('saveNameBtn');
+        const userNameInput = document.getElementById('userNameInput');
+        const profileImageInput = document.getElementById('profileImageInput');
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        saveNameBtn.onclick = function() {
+            const userName = userNameInput.value.trim();
+            const profileImageFile = profileImageInput.files[0];
+
+            if (userName !== '' && profileImageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('userName', userName);
+                    localStorage.setItem('profileImageUrl', e.target.result);
+                    modal.style.display = 'none';
+                }
+                reader.readAsDataURL(profileImageFile);
+            }
+        }
+
+        if (!localStorage.getItem('userName')) {
+            modal.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
